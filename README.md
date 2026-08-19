@@ -35,6 +35,21 @@ Vercel 项目需配置两个环境变量（Settings → Environment Variables）
 | `DEEPSEEK_API_KEY` | 你的 DeepSeek API Key（Sensitive） |
 | `DEEPSEEK_MODEL` | `deepseek-v4-flash` |
 
+## 国内免翻墙部署（香港轻量服务器）
+
+Vercel 的 `vercel.app` 域名在国内被墙。想让国内朋友不翻墙直接玩，
+部署到**香港轻量服务器**（大陆直连、免备案）即可，DeepSeek API 本身是国内服务，服务器直连毫无障碍。
+
+仓库已备好整套脚本（`server-setup.sh` / `deploy.sh` / `ecosystem.config.js` / `Caddyfile` / Docker 方案），
+完整图文步骤见 **[DEPLOY_CHINA.md](DEPLOY_CHINA.md)**：
+
+1. 买香港轻量服务器（腾讯云/阿里云，2C2G，Ubuntu 22.04，防火墙放行 80/443）
+2. 买域名 + A 记录解析到服务器 IP（免备案）
+3. `sudo bash server-setup.sh`（一键装 Node 20 / PM2 / Caddy）
+4. `git clone` 仓库 → `cp .env.example .env.local` 填 `DEEPSEEK_API_KEY`
+5. `bash deploy.sh`（一键构建 + PM2 启动）
+6. 改好 Caddyfile 绑定域名 → `systemctl reload caddy` → 自动 HTTPS 生效
+
 ## 代码结构
 
 ```

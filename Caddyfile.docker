@@ -1,0 +1,8 @@
+# 江湖录 · Docker 场景专用 Caddyfile（配合 docker-compose.yml）
+# 使用前：把 your-domain.com 换成你的真实域名（A 记录已解析到本机，香港免备案）。
+# app 是 compose 网络里 Next.js 服务的名字。
+
+your-domain.com {
+    encode gzip
+    reverse_proxy app:3000
+}

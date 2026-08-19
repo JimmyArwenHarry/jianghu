@@ -1,0 +1,30 @@
+# 江湖录 · Docker Compose（可选方案）：Next.js 服务 + Caddy 自动 HTTPS
+# 用法：
+#   1) cp .env.example .env.local   # 填入 DEEPSEEK_API_KEY
+#   2) 把 Caddyfile.docker 里的 your-domain.com 换成你的域名（A 记录已解析到本机）
+#   3) docker compose up -d --build
+# 对外：https://你的域名
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env.local
+    expose:
+      - "3000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile.docker:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

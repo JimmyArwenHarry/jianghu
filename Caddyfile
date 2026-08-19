@@ -1,0 +1,13 @@
+# 江湖录 · Caddy 反向代理（自动 HTTPS，Let's Encrypt 免费证书，自动续期）
+#
+# 使用方法：
+#   1) 把你的域名 A 记录解析到本服务器 IP（香港服务器免备案）；
+#   2) 把下面的 your-domain.com 换成你的真实域名；
+#   3) 本文件放到 /etc/caddy/Caddyfile，然后：systemctl reload caddy
+#
+# 说明：Caddy 会自动申请/续期证书；国内浏览器信任 Let's Encrypt，无需额外配置。
+
+your-domain.com {
+    encode gzip
+    reverse_proxy 127.0.0.1:3000
+}
