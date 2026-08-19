@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildJinYongPrompt } from "@/lib/jinyong-prompt";
 import { callChronicle } from "@/lib/jinyong";
-import { isRoleKey, roleEmoji, roleLabel, type RoleKey } from "@/lib/jinyong";
+import {
+  isRoleKey,
+  roleEmoji,
+  roleLabel,
+  type RoleKey,
+  isNovelKey,
+  getNovelSetting,
+} from "@/lib/jinyong";
 import type { ChatMessage } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -27,6 +34,7 @@ function chronicleInstruction(
 要求：
 - 以"说书人"的口吻（"话说当年""这一去，便是十年""正是——"），半文半白，有节奏、有悬念、有余味；
 - 回顾${roleNote}从卑微到终局的一生际遇：择其关键三四处，写尽恩怨情仇、成败生死，点到即止，不必事无巨细；
+- 战记要与他所经历的朝代为底色（本局时代背景已告知于你），提及他遇过的豪杰、卷进的大事，但不要点破"这是某本书里的事"；
 - ${destinyNote}；
 - 正文写完之后，另起一行单独写【七律】三个字，再另起一行，为这部江湖作一首七言律诗：
   八句、每句七字、偶数句押平水韵、颔联与颈联须对仗；诗题可写可不写；全诗须回望全剧、点破宿命。
@@ -40,6 +48,7 @@ export async function POST(req: NextRequest) {
     destiny?: unknown;
     reading?: unknown;
     character?: unknown;
+    novel?: unknown;
   };
   try {
     body = await req.json();
@@ -64,10 +73,14 @@ export async function POST(req: NextRequest) {
     typeof body.character === "string" && Array.from(body.character.trim()).length === 1
       ? Array.from(body.character.trim())[0]
       : undefined;
+  // 本局小说：沿用 chat 阶段抽定并回传的 key（天机，仅服务端使用）
+  const novel = isNovelKey(body.novel)
+    ? getNovelSetting(body.novel) ?? undefined
+    : undefined;
 
   // 必须以 USER 消息收尾（deepseek-v4-flash 在 thinking:disabled 下 system 收尾会返回空白）
   const messages: ChatMessage[] = [
-    { role: "system", content: buildJinYongPrompt(role, destiny, reading) },
+    { role: "system", content: buildJinYongPrompt(role, destiny, reading, novel) },
     ...history,
     { role: "user", content: chronicleInstruction(role, destiny, reading, character) },
   ];

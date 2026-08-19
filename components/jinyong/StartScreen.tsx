@@ -46,7 +46,7 @@ export default function StartScreen({ onStart }: StartScreenProps) {
                 className={`h-[78px] rounded-xl border-2 px-2 py-2 backdrop-blur transition-colors ${
                   active
                     ? "border-gold bg-gold/15 glow-gold"
-                    : "border-white/10 bg-night-2/80 hover:border-gold/40"
+                    : "border-black/10 bg-night-2/80 hover:border-gold/40"
                 }`}
               >
                 <div className="flex items-center justify-center gap-1.5">
@@ -74,7 +74,7 @@ export default function StartScreen({ onStart }: StartScreenProps) {
         className={`option-btn h-[52px] w-full max-w-sm rounded-xl border-2 px-6 text-lg font-bold tracking-widest transition-opacity ${
           selected
             ? "border-gold/70 bg-gold/10 text-gold glow-gold"
-            : "cursor-not-allowed border-white/10 bg-white/5 text-ghost/50"
+            : "cursor-not-allowed border-black/10 bg-black/5 text-ghost/50"
         }`}
       >
         {selected ? "以此时此身 · 踏入江湖 ▶" : "先择一身世"}

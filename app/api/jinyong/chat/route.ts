@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildJinYongPrompt } from "@/lib/jinyong-prompt";
 import { callDeepSeek } from "@/lib/deepseek";
-import { isRoleKey, roleEmoji, roleLabel, type RoleKey } from "@/lib/jinyong";
+import {
+  isRoleKey,
+  roleEmoji,
+  roleLabel,
+  type RoleKey,
+  isNovelKey,
+  pickNovel,
+  getNovelSetting,
+} from "@/lib/jinyong";
 import type { ChatMessage, StoryResponse } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -19,6 +27,8 @@ interface RequestBody {
   destiny?: unknown;
   /** 判词（可选） */
   reading?: unknown;
+  /** 本局抽定的小说 key（开局由服务端抽取并下发，客户端原样回传） */
+  novel?: unknown;
 }
 
 /** 本回定位：按人生阶段给出节奏/格局提示（前期快、中期立、后期清算） */
@@ -52,7 +62,7 @@ function storyInstruction(
     : "";
   return (
     `【回合指令】第 ${turn} 回合（turn=${turn}）。` +
-    `请先写 100-200 字剧情正文（承接上文，金庸笔法，半文半白、有画面感、点到即止，可以跨过数月至数年推进人生），` +
+    `请先写 60-90 字剧情正文（承接上文，金庸笔法，半文半白、有画面感、点到即止，可以跨过数月至数年推进人生），` +
     `然后在最后单独列出 3 个选项，每个选项单独一行并以 * 开头。` +
     `不要JSON，不要markdown标题，不要多余的说明文字。` +
     turnPhaseNote(turn) +
@@ -71,7 +81,7 @@ function endingInstruction(role?: RoleKey, destiny?: string): string {
     : "结局要有余韵、有留白。";
   return (
     `【回合指令】第 ${TOTAL_TURNS} 回合（turn=${TOTAL_TURNS}），这是游戏结局，也是这位草民一生的终点。` +
-    `请根据玩家过去所有选择，写一段 200-400 字的结局正文：为${roleNote}的一生作结——` +
+    `请根据玩家过去所有选择，写一段 120-200 字的结局正文：为${roleNote}的一生作结——` +
     `点明他最终成了大侠还是大恶人、或有怎样超乎寻常的归宿（功成身退、隐于市井、立身扬名、香消玉殒、看破红尘……），` +
     `并与前文关键事件、人生各阶段的节点呼应，站在"一生"的高度收束。` +
     `${destinyNote}` +
@@ -98,6 +108,10 @@ export async function POST(req: NextRequest) {
     ? body.reading.trim().slice(0, 120)
     : undefined;
 
+  // 本局小说：开局由服务端随机抽定（天机），客户端回传后沿用；非法则重新抽一部
+  const novelKey = isNovelKey(body.novel) ? body.novel : pickNovel().key;
+  const novel = getNovelSetting(novelKey) ?? undefined;
+
   if (history.length === 0 && turn === 1) {
     return NextResponse.json({ error: "缺少对话历史" }, { status: 400 });
   }
@@ -109,7 +123,7 @@ export async function POST(req: NextRequest) {
     ? endingInstruction(role, destiny)
     : storyInstruction(turn, role, destiny);
   const messages: ChatMessage[] = [
-    { role: "system", content: buildJinYongPrompt(role, destiny, reading) },
+    { role: "system", content: buildJinYongPrompt(role, destiny, reading, novel) },
     ...history,
     { role: "user", content: turnInstruction },
   ];
@@ -124,6 +138,7 @@ export async function POST(req: NextRequest) {
       is_ending: isEnding,
       ending_story: isEnding ? narrative : "",
       achievements: [],
+      novel: novelKey,
     };
     return NextResponse.json({ data: story });
   } catch (e) {

@@ -151,7 +151,7 @@ export default function FortuneScreen({
             className={`option-btn h-[52px] w-full max-w-sm rounded-xl border-2 px-6 text-lg font-bold tracking-widest ${
               char && status !== "loading"
                 ? "border-gold/70 bg-gold/10 text-gold glow-gold"
-                : "cursor-not-allowed border-white/10 bg-white/5 text-ghost/50"
+                : "cursor-not-allowed border-black/10 bg-black/5 text-ghost/50"
             }`}
           >
             {status === "loading" ? "先生正在断字…" : "落笔 · 求一卦 🖌"}

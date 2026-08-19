@@ -14,6 +14,8 @@ export interface StoryResponse {
   is_ending: boolean;
   ending_story: string;
   achievements: Array<Achievement | string>;
+  /** 本局抽定的原著小说 key（天机，仅供回传，绝不渲染给玩家） */
+  novel?: string;
 }
 
 /** 对话历史消息（传给 DeepSeek） */

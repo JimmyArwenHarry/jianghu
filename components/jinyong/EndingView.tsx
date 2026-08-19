@@ -129,7 +129,7 @@ export default function EndingView({
       {/* 结局正文（打字机 + 点击跳过） */}
       <div
         onClick={() => setSkipTyping(true)}
-        className="cursor-pointer rounded-2xl border border-white/10 bg-night-2/80 p-5 backdrop-blur"
+        className="cursor-pointer rounded-2xl border border-black/10 bg-night-2/80 p-5 backdrop-blur"
       >
         <Typewriter
           text={endingStory}
@@ -217,7 +217,7 @@ export default function EndingView({
             </button>
             <button
               onClick={onRestart}
-              className="option-btn h-[52px] w-full rounded-xl border border-white/15 bg-night-3/60 text-base font-bold text-parchment"
+              className="option-btn h-[52px] w-full rounded-xl border border-black/15 bg-night-3/60 text-base font-bold text-parchment"
             >
               ↺ 重新投胎，再入江湖
             </button>

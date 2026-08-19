@@ -25,7 +25,7 @@ export default function TurnIndicator({ turn, total, title = "江湖录" }: Turn
           {isFinale ? `${total} / ${total}` : `${turn} / ${total}`}
         </span>
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-night-3 ring-1 ring-white/10">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-night-3 ring-1 ring-black/10">
         <div
           className="progress-shimmer h-full rounded-full transition-[width] duration-700 ease-out"
           style={{ width: `${pct}%` }}

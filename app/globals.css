@@ -1,32 +1,32 @@
 @import "tailwindcss";
 
-/* ============ 江湖主题色板（墨/朱砂/鎏金） ============ */
+/* ============ 江湖主题色板（羊皮纸/墨/朱砂/鎏金） ============ */
 @theme {
-  --color-night: #0a0a12;      /* 页面底色：墨夜 */
-  --color-night-2: #12121f;    /* 卡片底色 */
-  --color-night-3: #1b1b2e;    /* 按钮/内嵌 */
-  --color-ghost: #8a7f6e;      /* 次要文字：泛旧的绢黄 */
-  --color-ice: #efe6d0;        /* 主文字：宣纸米白 */
-  --color-vermillion: #d0452f; /* 朱砂红 */
-  --color-gold: #d7b25c;       /* 鎏金 */
-  --color-parchment: #efe6d0;  /* 宣纸米白 */
-  --color-cyber: #d7b25c;      /* 兼容旧类名（如 hover:text-cyber）→ 鎏金 */
-  --color-neon: #d7b25c;       /* 兼容旧类名（进度条等）→ 鎏金 */
-  --color-plasma: #d0452f;     /* 兼容旧类名 → 朱砂 */
+  --color-night: #f2e6cd;      /* 页面底色：羊皮纸 */
+  --color-night-2: #eadbb9;    /* 卡片底色：略深羊皮纸 */
+  --color-night-3: #dccaa2;    /* 按钮/内嵌：更深的羊皮纸 */
+  --color-ghost: #7a6a4d;      /* 次要文字：棕褐 */
+  --color-ice: #33291a;        /* 主文字：墨色 */
+  --color-vermillion: #c23b24; /* 朱砂红 */
+  --color-gold: #a97b22;       /* 鎏金（深古金，羊皮纸上清晰可读） */
+  --color-parchment: #33291a;  /* 主文字：墨色 */
+  --color-cyber: #a97b22;      /* 兼容旧类名（如 hover:text-cyber）→ 鎏金 */
+  --color-neon: #a97b22;       /* 兼容旧类名（进度条等）→ 鎏金 */
+  --color-plasma: #c23b24;     /* 兼容旧类名 → 朱砂 */
 }
 
 /* ============ 全局底色 ============ */
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
   background-color: var(--color-night);
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(208, 69, 47, 0.08), transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(215, 178, 92, 0.06), transparent 60%),
-    linear-gradient(rgba(215, 178, 92, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(215, 178, 92, 0.03) 1px, transparent 1px);
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(169, 123, 34, 0.12), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(194, 59, 36, 0.05), transparent 60%),
+    linear-gradient(rgba(122, 106, 77, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(122, 106, 77, 0.05) 1px, transparent 1px);
   background-size: 100% 100%, 100% 100%, 42px 42px, 42px 42px;
   color: var(--color-parchment);
   min-height: 100dvh;
@@ -41,18 +41,18 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(215, 178, 92, 0.25);
+  background: rgba(169, 123, 34, 0.3);
   border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(215, 178, 92, 0.45);
+  background: rgba(169, 123, 34, 0.5);
 }
 
 /* ============ Markdown 正文样式 ============ */
 .md-body {
   font-size: 15px;
   line-height: 1.9;
-  color: #dbe7ff;
+  color: #3a2f1e;
   word-break: break-word;
 }
 .md-body p {
@@ -73,8 +73,8 @@ body {
   font-style: italic;
 }
 .md-body code {
-  background: rgba(0, 217, 255, 0.12);
-  border: 1px solid rgba(0, 217, 255, 0.2);
+  background: rgba(169, 123, 34, 0.12);
+  border: 1px solid rgba(169, 123, 34, 0.25);
   border-radius: 6px;
   padding: 0.1em 0.4em;
   font-size: 0.9em;
@@ -84,9 +84,9 @@ body {
   margin: 0.6em 0;
   padding: 0.3em 0.9em;
   border-left: 3px solid var(--color-plasma);
-  background: rgba(185, 103, 255, 0.08);
+  background: rgba(169, 123, 34, 0.07);
   border-radius: 0 8px 8px 0;
-  color: #cdd6f0;
+  color: #4a3f2e;
 }
 .md-body h1, .md-body h2, .md-body h3 {
   color: var(--color-neon);
@@ -111,14 +111,14 @@ body {
 .md-body hr {
   border: none;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 255, 159, 0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(169, 123, 34, 0.4), transparent);
   margin: 1em 0;
 }
 .md-body del {
-  color: #5b6b8c;
+  color: #8a7a5f;
 }
 
-/* ============ 金庸江湖主题的 Markdown 变体（墨/朱砂/鎏金） ============ */
+/* ============ 金庸江湖主题的 Markdown 变体（羊皮纸/墨/朱砂/鎏金） ============ */
 .md-body--wuxia {
   font-size: 15px;
   line-height: 2;
@@ -134,8 +134,8 @@ body {
 }
 .md-body--wuxia blockquote {
   border-left: 3px solid var(--color-vermillion);
-  background: rgba(208, 69, 47, 0.08);
-  color: #e6dcc6;
+  background: rgba(194, 59, 36, 0.06);
+  color: #4a3a25;
 }
 .md-body--wuxia h1,
 .md-body--wuxia h2,
@@ -146,15 +146,15 @@ body {
   color: var(--color-gold);
 }
 .md-body--wuxia hr {
-  background: linear-gradient(90deg, transparent, rgba(215, 178, 92, 0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(169, 123, 34, 0.4), transparent);
 }
 
 /* 鎏金 / 朱砂 发光文字 */
 .glow-gold {
-  text-shadow: 0 0 10px rgba(215, 178, 92, 0.7), 0 0 28px rgba(215, 178, 92, 0.35);
+  text-shadow: 0 0 10px rgba(169, 123, 34, 0.5), 0 0 28px rgba(169, 123, 34, 0.22);
 }
 .glow-red {
-  text-shadow: 0 0 10px rgba(208, 69, 47, 0.7), 0 0 28px rgba(208, 69, 47, 0.35);
+  text-shadow: 0 0 10px rgba(194, 59, 36, 0.55), 0 0 28px rgba(194, 59, 36, 0.25);
 }
 
 /* ============ 动画 ============ */
@@ -175,10 +175,10 @@ body {
   100% { transform: translateY(0); opacity: 1; }
 }
 @keyframes glitch-shift {
-  0%, 86%, 100% { transform: translate(0, 0); text-shadow: 0 0 12px rgba(0,255,159,0.6); }
-  88% { transform: translate(-2px, 1px); text-shadow: -3px 0 0 rgba(0,217,255,0.7), 3px 0 0 rgba(185,103,255,0.7); }
-  90% { transform: translate(2px, -1px); text-shadow: 3px 0 0 rgba(0,217,255,0.7), -3px 0 0 rgba(185,103,255,0.7); }
-  92% { transform: translate(0, 0); text-shadow: 0 0 12px rgba(0,255,159,0.6); }
+  0%, 86%, 100% { transform: translate(0, 0); text-shadow: 0 0 12px rgba(169,123,34,0.5); }
+  88% { transform: translate(-2px, 1px); text-shadow: -3px 0 0 rgba(194,59,36,0.7), 3px 0 0 rgba(169,123,34,0.7); }
+  90% { transform: translate(2px, -1px); text-shadow: 3px 0 0 rgba(194,59,36,0.7), -3px 0 0 rgba(169,123,34,0.7); }
+  92% { transform: translate(0, 0); text-shadow: 0 0 12px rgba(169,123,34,0.5); }
 }
 @keyframes shimmer-bar {
   0% { background-position: -200% 0; }
@@ -229,8 +229,8 @@ body {
     to bottom,
     transparent 0px,
     transparent 3px,
-    rgba(0, 0, 0, 0.12) 3px,
-    rgba(0, 0, 0, 0.12) 4px
+    rgba(0, 0, 0, 0.06) 3px,
+    rgba(0, 0, 0, 0.06) 4px
   );
   z-index: 40;
 }
@@ -243,8 +243,8 @@ body {
   transform: scale(0.97);
 }
 .option-btn:hover:not(:disabled) {
-  border-color: rgba(215, 178, 92, 0.7);
-  box-shadow: 0 0 18px rgba(215, 178, 92, 0.25), inset 0 0 12px rgba(215, 178, 92, 0.06);
+  border-color: rgba(169, 123, 34, 0.65);
+  box-shadow: 0 0 18px rgba(169, 123, 34, 0.18), inset 0 0 12px rgba(169, 123, 34, 0.05);
 }
 .option-btn:disabled {
   opacity: 0.45;
@@ -255,9 +255,9 @@ body {
 .progress-shimmer {
   background-image: linear-gradient(
     110deg,
-    rgba(215, 178, 92, 0.95) 0%,
-    rgba(208, 69, 47, 0.95) 50%,
-    rgba(215, 178, 92, 0.95) 100%
+    rgba(169, 123, 34, 0.95) 0%,
+    rgba(194, 59, 36, 0.95) 50%,
+    rgba(169, 123, 34, 0.95) 100%
   );
   background-size: 200% 100%;
   animation: shimmer-bar 2.4s linear infinite;

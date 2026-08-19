@@ -215,7 +215,7 @@ export async function callDeepSeek(
     role: "user",
     content:
       `⚠️【自动重试·第 ${attempt} 次】你上一条回复不完整（缺少剧情正文或选项）。` +
-      `请先写 100-200 字剧情正文，然后空一行，用 * 开头逐行列出 3 个选项。` +
+      `请先写 60-90 字剧情正文，然后空一行，用 * 开头逐行列出 3 个选项。` +
       `不要JSON，不要markdown标题。`,
   });
 

@@ -45,6 +45,9 @@ export default function JinYongGame() {
   const [poem, setPoem] = useState("");
   const [endingError, setEndingError] = useState("");
 
+  // 本局抽定的原著小说 key（天机：仅用于回传后端，绝不渲染给玩家）
+  const [novelKey, setNovelKey] = useState<string | null>(null);
+
   const pendingRef = useRef<{ history: ChatMessage[]; turn: number } | null>(null);
   const busyRef = useRef(false);
   const endingBusyRef = useRef(false);
@@ -66,6 +69,7 @@ export default function JinYongGame() {
             destiny: fortune?.destiny,
             reading: fortune?.reading,
             character: fortune?.character,
+            novel: novelKey,
           }),
         });
         const json = await res.json().catch(() => ({}));
@@ -84,7 +88,7 @@ export default function JinYongGame() {
         endingBusyRef.current = false;
       }
     },
-    [role, fortune]
+    [role, fortune, novelKey]
   );
 
   const retryEndingFlow = () => {
@@ -112,6 +116,7 @@ export default function JinYongGame() {
             role,
             destiny: fortune?.destiny,
             reading: fortune?.reading,
+            novel: novelKey,
           }),
         });
         const json = await res.json().catch(() => ({}));
@@ -119,6 +124,8 @@ export default function JinYongGame() {
           throw new Error(json.error || `请求失败 (HTTP ${res.status})`);
         }
         const s = json.data as StoryResponse;
+        // 开局回合服务端抽定本局小说，回传 key 后由客户端存起（天机，不渲染）
+        if (s.novel) setNovelKey(s.novel);
         setStory(s);
         setTurn(nextTurn);
         setDoneTyping(false);
@@ -145,7 +152,7 @@ export default function JinYongGame() {
         busyRef.current = false;
       }
     },
-    [beginEndingFlow, role, fortune]
+    [beginEndingFlow, role, fortune, novelKey]
   );
 
   // 择定身份后进入卦摊测字
@@ -198,6 +205,7 @@ export default function JinYongGame() {
     setChronicleStatus("idle");
     setPoem("");
     setEndingError("");
+    setNovelKey(null);
     setPhase("start");
   };
 
@@ -304,7 +312,7 @@ function StoryView({
       {/* 剧情卡片（点击跳过打字机） */}
       <div
         onClick={onSkip}
-        className="cursor-pointer rounded-2xl border border-white/10 bg-night-2/80 p-5 backdrop-blur"
+        className="cursor-pointer rounded-2xl border border-black/10 bg-night-2/80 p-5 backdrop-blur"
       >
         <Typewriter
           key={story.narrative}
@@ -334,7 +342,7 @@ function StoryView({
 
       {/* 上一选择回显 */}
       {lastChoice && (
-        <div className="rounded-lg border border-white/5 bg-night-3/40 px-4 py-2 text-xs text-ghost">
+        <div className="rounded-lg border border-black/5 bg-night-3/40 px-4 py-2 text-xs text-ghost">
           <span className="mr-1.5 font-bold text-gold">➤</span>
           <span className="mr-1 text-gold">你之所择：</span>
           {lastChoice}
@@ -348,7 +356,7 @@ function StoryView({
             key={i}
             disabled={!doneTyping}
             onClick={() => onChoose(opt)}
-            className="option-btn min-h-[48px] w-full rounded-xl border border-white/15 bg-night-3/70 px-4 py-3 text-left text-[15px] leading-6 text-parchment"
+            className="option-btn min-h-[48px] w-full rounded-xl border border-black/15 bg-night-3/70 px-4 py-3 text-left text-[15px] leading-6 text-parchment"
           >
             <span className="mr-2 font-mono text-gold">
               {NUM_CHIPS[i] ?? `(${i + 1})`}
@@ -400,7 +408,7 @@ function ErrorView({
       </button>
       <button
         onClick={onRestart}
-        className="h-[50px] w-full max-w-xs rounded-xl border border-white/15 text-sm text-ghost"
+        className="h-[50px] w-full max-w-xs rounded-xl border border-black/15 text-sm text-ghost"
       >
         回到江湖门外
       </button>

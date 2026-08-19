@@ -6,6 +6,15 @@
 import { singleCall, extractJson, type DeepSeekOptions } from "./deepseek";
 import type { ChatMessage } from "./types";
 
+/* 金庸原著背景库：本局随机取一部小说作为江湖背景（书名对玩家保密） */
+export {
+  NOVEL_SETTINGS,
+  isNovelKey,
+  pickNovel,
+  getNovelSetting,
+  type NovelSetting,
+} from "./novels";
+
 /* ================================================================
  * 开场身份（卑贱角色）
  * ================================================================ */
