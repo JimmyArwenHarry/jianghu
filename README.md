@@ -40,14 +40,15 @@ Vercel 项目需配置两个环境变量（Settings → Environment Variables）
 Vercel 的 `vercel.app` 域名在国内被墙。想让国内朋友不翻墙直接玩，
 部署一台**大陆直连、免备案的境外服务器**即可（DeepSeek API 本身是国内服务，服务器直连毫无障碍）。
 
-预算从低到高有 4 条路（部署命令完全相同）：
+预算从低到高有 5 条路：
 
-| 方案 | 价格 |
-| --- | --- |
-| 🆓 Oracle Cloud Always Free | **¥0/月**（ARM 2C/12G，永久免费） |
-| 🥇 腾讯云/阿里云 香港轻量（新用户活动） | **约 ¥38~99/年** |
-| 🏠 大陆轻量 + ICP 备案 | 约 ¥68~99/年（延迟最低） |
-| 💰 海外年付 VPS | 约 ¥80/年 |
+| 方案 | 价格 | 说明 |
+| --- | --- | --- |
+| 🖥️ 本地电脑 + cpolar 内网穿透 | **¥0** | 电脑常开，临时拉朋友玩（`bash tunnel.sh`） |
+| 🆓 Oracle Cloud Always Free | **¥0/月** | ARM 2C/12G，永久免费，需外币信用卡 |
+| 🥇 腾讯云/阿里云 香港轻量（新用户活动） | **约 ¥38~99/年** | 最省心，长期稳定 |
+| 🏠 大陆轻量 + ICP 备案 | 约 ¥68~99/年 | 延迟最低 |
+| 💰 海外年付 VPS | 约 ¥80/年 | 极限省钱 |
 
 仓库已备好整套脚本（`server-setup.sh` / `deploy.sh` / `ecosystem.config.js` / `Caddyfile` / Docker 方案），
 完整对比与图文步骤见 **[DEPLOY_CHINA.md](DEPLOY_CHINA.md)**：
