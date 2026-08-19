@@ -34,6 +34,11 @@ if [ ! -f .env.local ]; then
   echo "   ⚠️  已生成 .env.local，请先填入 DEEPSEEK_API_KEY 再运行：vim $APP_DIR/.env.local"
   exit 1
 fi
+if ! grep -qE "^DEEPSEEK_API_KEY=sk-" .env.local; then
+  echo "   ⚠️  .env.local 里缺少 DEEPSEEK_API_KEY（或不是 sk- 开头），请先填入真实 Key："
+  echo "       vim $APP_DIR/.env.local"
+  exit 1
+fi
 
 echo "▶ 2/5 检查依赖与构建"
 [ -d node_modules ] || { echo "   安装依赖..."; npm ci --no-audit --no-fund; }

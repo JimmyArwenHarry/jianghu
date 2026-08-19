@@ -16,7 +16,11 @@ export type RoleKey =
   | "rogue"
   | "courtesan"
   | "scholar"
-  | "watchman";
+  | "watchman"
+  | "soldier"
+  | "peddler"
+  | "servant"
+  | "innkeeper";
 
 export interface RoleOption {
   key: RoleKey;
@@ -32,6 +36,10 @@ export const ROLE_OPTIONS: RoleOption[] = [
   { key: "courtesan", label: "妓女", emoji: "🌺", desc: "青楼卖笑 · 身不由己" },
   { key: "scholar", label: "落魄书生", emoji: "📜", desc: "科场失意 · 穷困潦倒" },
   { key: "watchman", label: "更夫", emoji: "🏮", desc: "夜夜打更 · 见证风月" },
+  { key: "soldier", label: "底层士兵", emoji: "🪖", desc: "行伍之卒 · 朝不保夕" },
+  { key: "peddler", label: "小商贩", emoji: "🧺", desc: "肩挑叫卖 · 锱铢营生" },
+  { key: "servant", label: "家丁", emoji: "🚪", desc: "豪门杂役 · 仰人鼻息" },
+  { key: "innkeeper", label: "店小二", emoji: "🍶", desc: "酒肆跑堂 · 迎来送往" },
 ];
 
 export function isRoleKey(v: unknown): v is RoleKey {
@@ -148,11 +156,11 @@ export async function callFortune(
 }
 
 /* ================================================================
- * 战记总结：约 800 字金庸文风正文 + 一首七律
+ * 战记总结：约 400 字说书人口气正文 + 一首七律
  * ================================================================ */
 
 export interface Chronicle {
-  /** 约 800 字战记正文 */
+  /** 约 400 字战记正文 */
   chronicle: string;
   /** 卷末七言律诗（含诗题行则一并保留） */
   poem: string;
@@ -197,18 +205,18 @@ function parseChronicleContent(content: string): Chronicle | null {
   return { chronicle: content.trim(), poem: "" };
 }
 
-/** 生成战记：约 800 字金庸文风正文 + 一首七律。正文不足或七律缺失时 nudge 重试。 */
+/** 生成战记：约 400 字说书人口气正文 + 一首七律。正文过短或七律缺失时 nudge 重试。 */
 export async function callChronicle(
   messages: ChatMessage[],
   opts: DeepSeekOptions = {}
 ): Promise<Chronicle> {
-  const { maxTokens = 3000 } = opts;
+  const { maxTokens = 2500 } = opts;
   const MAX_ATTEMPTS = 5;
 
   const nudge = (attempt: number): ChatMessage => ({
     role: "user",
     content:
-      `⚠️【自动重试·第 ${attempt} 次】请先输出不少于 700 字的战记正文（金庸文风），` +
+      `⚠️【自动重试·第 ${attempt} 次】请先输出约 400 字的战记正文（说书人金庸文风，控制在 300~450 字），` +
       `然后另起一行单独写【七律】，再另起一行输出全诗（八句、每句七字）。不要JSON，不要标题，不要多余文字。`,
   });
 
@@ -222,7 +230,7 @@ export async function callChronicle(
       continue;
     }
     const parsed = parseChronicleContent(content);
-    if (parsed && parsed.chronicle.length >= 400) {
+    if (parsed && parsed.chronicle.length >= 300) {
       return parsed;
     }
     lastErr = new Error("模型输出的战记过短或缺失");
