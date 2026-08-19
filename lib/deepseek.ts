@@ -78,12 +78,22 @@ export function extractJson(text: string): unknown {
 const OPTION_PREFIX_RE =
   /^(?:[*\-•]\s+|[①-⑳]\s*|[0-9一二三四五六七八九十]+[.、,，)）]\s*|[（(][0-9一二三四五六七八九十]+[)）]\s*|选项[一二三四五六七八九十A-Za-z][:：]?\s*)/;
 
+/** 选项分隔标记：行首的【选项】/选项：/选项:（模型偶尔会先写"【选项】"再列选项） */
+const OPTION_MARKER_RE = /^【?\s*选项\s*】?\s*[:：]?\s*/;
+
+/** 清理正文尾部误粘的选项标记（如"……【选项】"） */
+function cleanNarrative(s: string): string {
+  return s.replace(/\s*【?\s*选项\s*】?\s*[:：]?\s*$/, "").trim();
+}
+
 /** 从结构化正文中提取选项行（兼容 *、-、•、1.、①、（一）、一、选项一 及 **加粗** 包裹） */
 function extractOptionLines(text: string): string[] {
   const out: string[] = [];
   for (const raw of text.split(/\n/)) {
     let line = raw.trim();
     if (!line) continue;
+    // 去掉行首的"【选项】/选项："标记（模型偶尔把它与第一个选项写在同一行）
+    line = line.replace(OPTION_MARKER_RE, "").trim();
     // 去掉成对的加粗/斜体包裹（模型常把选项写成 **一、xxx** 或 * xxx *）
     const wrap = line.match(/^(\*{1,2}|_{1,2})([\s\S]+?)\1$/);
     if (wrap && wrap[2]) line = wrap[2].trim();
@@ -94,8 +104,8 @@ function extractOptionLines(text: string): string[] {
   return out;
 }
 
-/** 解析剧情输出：优先当 JSON；否则按"正文 + 选项列表"解析 */
-function parseStoryContent(content: string): {
+/** 解析剧情输出：优先当 JSON；否则按"正文 + 选项列表"解析（导出以便单测） */
+export function parseStoryContent(content: string): {
   narrative: string;
   options: string[];
 } {
@@ -112,11 +122,25 @@ function parseStoryContent(content: string): {
     /* 不是 JSON，走正文解析 */
   }
 
-  // 2) 正文 + 选项列表（首条"像选项的行"之前是正文）
   const lines = content.split(/\n/);
+
+  // 2a) 模型若先写"【选项】"再列选项（甚至与第一个选项同一行），按标记切分——
+  //     否则第一个选项会被误并入正文，只剩两个选项可点。
+  const markerIdx = lines.findIndex((l) => OPTION_MARKER_RE.test(l.trim()));
+  if (markerIdx !== -1) {
+    const narrative = cleanNarrative(lines.slice(0, markerIdx).join("\n"));
+    const optionsBlock = lines
+      .slice(markerIdx)
+      .join("\n")
+      .replace(OPTION_MARKER_RE, "");
+    const options = extractOptionLines(optionsBlock);
+    if (narrative && options.length >= 1) return { narrative, options };
+  }
+
+  // 2b) 首条"像选项的行"之前是正文
   const firstBullet = lines.findIndex((l) => OPTION_PREFIX_RE.test(l.trim()));
   if (firstBullet !== -1) {
-    const narrative = lines.slice(0, firstBullet).join("\n").trim();
+    const narrative = cleanNarrative(lines.slice(0, firstBullet).join("\n"));
     const options = extractOptionLines(content);
     return { narrative, options };
   }
